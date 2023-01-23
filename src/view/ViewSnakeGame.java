@@ -38,7 +38,7 @@ public class ViewSnakeGame implements Observateur{
 		}
 		
 
-		jFrame.setSize(new Dimension(tailleX,tailleY));
+		jFrame.setSize(new Dimension(panelX *50,panelY *50));
 		Dimension windowSize = jFrame.getSize();
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Point centerPoint = ge.getCenterPoint();
@@ -66,6 +66,7 @@ public class ViewSnakeGame implements Observateur{
 		jFrame.setVisible(true);
 		int panelX=panel.getSizeX();
 		int panelY=panel.getSizeY();
+		
 		int raport=1;
 		int tailleX=panelX*500/panelX;
 		int tailleY=panelY*500/panelY;
@@ -78,7 +79,7 @@ public class ViewSnakeGame implements Observateur{
 		}
 		
 
-		jFrame.setSize(new Dimension(tailleX,tailleY));
+		jFrame.setSize(new Dimension(panelX *50,panelY * 50));
 		panel.repaint();
 	}
 
