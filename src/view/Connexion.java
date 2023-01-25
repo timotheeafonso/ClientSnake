@@ -6,6 +6,11 @@ import javax.swing.*;
 import controller.ControllerSnakeGame;
 
 import java.awt.event.*;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 
 public class Connexion extends JFrame {
@@ -63,7 +68,21 @@ public class Connexion extends JFrame {
     }
 
     boolean checkConnexion(String pseudo, char[] passW){
-        //TODO connexion serveur
+
+        String s="localhost";
+        int p=2627;
+        String ch=pseudo;
+        PrintWriter sortie;
+    
+
+        try{// on connecte un socket
+            Socket so = new Socket(s, p);
+            sortie = new PrintWriter(so.getOutputStream(), true);
+            sortie.println(ch); // on écrit la chaîne et le newline dans le canal de sortie
+            so.close(); // on ferme la connexion
+        } catch(UnknownHostException e) {System.out.println(e);}
+        catch (IOException e) {System.out.println("Aucun serveur n’est rattaché au port ");}
+
         return true; 
     }
   
