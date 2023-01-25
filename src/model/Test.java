@@ -1,10 +1,12 @@
 package model;
 
 import controller.ControllerSnakeGame;
+import view.Connexion;
 
 public class Test{
 
 	public static void main(String[] args) {
-		ControllerSnakeGame c=new ControllerSnakeGame();
+		Connexion o = new Connexion();
+		//ControllerSnakeGame c=new ControllerSnakeGame();
 	}
 }
