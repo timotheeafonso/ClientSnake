@@ -260,6 +260,7 @@ public class SnakeGame extends SimpleGame {
 	public void takeTurn() {
 		if(!snakes.isEmpty()){
 			moveAgent();
+
 		}
 	}
 

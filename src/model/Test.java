@@ -6,7 +6,7 @@ import view.Connexion;
 public class Test{
 
 	public static void main(String[] args) {
-		Connexion o = new Connexion();
+		new Connexion();
 		//ControllerSnakeGame c=new ControllerSnakeGame();
 	}
 }
