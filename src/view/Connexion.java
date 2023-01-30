@@ -6,9 +6,7 @@ import javax.swing.*;
 import controller.ControllerSnakeGame;
 
 import java.awt.event.*;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -55,7 +53,7 @@ public class Connexion extends JFrame {
                 char[] password = passField.getPassword();
 
                 if(checkConnexion(username, password)){
-                    ControllerSnakeGame c=new ControllerSnakeGame();
+                    ControllerSnakeGame c= new ControllerSnakeGame();
                     dispose();
                 }else{
                     JFrame jFrame = new JFrame();
@@ -67,23 +65,39 @@ public class Connexion extends JFrame {
         setVisible(true);
     }
 
-    boolean checkConnexion(String pseudo, char[] passW){
+    boolean checkConnexion(String id, char[] passW){
 
         String s="localhost";
         int p=2627;
-        String ch=pseudo;
+        String pseudo= id;
+        char[] mdp = passW;
         PrintWriter sortie;
+        BufferedReader entree;
+        String retour = "";
     
 
         try{// on connecte un socket
             Socket so = new Socket(s, p);
             sortie = new PrintWriter(so.getOutputStream(), true);
-            sortie.println(ch); // on écrit la chaîne et le newline dans le canal de sortie
-            so.close(); // on ferme la connexion
+            sortie.println(pseudo); // on écrit la chaîne et le newline dans le canal de sortie
+            sortie.println(mdp);
+
+
+            entree = new BufferedReader(new InputStreamReader(so.getInputStream()));
+            retour = entree.readLine();
+
+            System.out.println(retour);
+
+            so.close();
+
         } catch(UnknownHostException e) {System.out.println(e);}
         catch (IOException e) {System.out.println("Aucun serveur n’est rattaché au port ");}
 
-        return true; 
+        if(retour.equals("200")){
+            return true;
+        }else{
+            return false;
+        }
     }
   
 }
