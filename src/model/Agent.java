@@ -1,10 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import utils.Position;
 
-public abstract class Agent {
+public abstract class Agent implements Serializable {
     protected ArrayList<Position> position;
 
     public ArrayList<Position> getPosition() {

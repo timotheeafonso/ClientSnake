@@ -21,7 +21,7 @@ import utils.Position;
 
 public class InputMap implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	//private static final long serialVersionUID = 123456L;
 	
 
 	private String filename;

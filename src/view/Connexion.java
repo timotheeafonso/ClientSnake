@@ -3,7 +3,10 @@ package view;
 import java.awt.*;
 import javax.swing.*;
 
+import com.google.gson.Gson;
+
 import controller.ControllerSnakeGame;
+import model.StateGame;
 
 import java.awt.event.*;
 import java.io.*;
@@ -17,9 +20,11 @@ public class Connexion extends JFrame {
     private JTextField userField;
     private JPasswordField passField;
     private JButton loginButton;
+    private Socket so;
+    String s="localhost";
+    int p=2627;
 
-    public Connexion(){
-    
+    public Connexion() throws IOException{
         setTitle("Connexion Snake Game");
         setSize(1000, 100);
         setResizable(false);
@@ -53,51 +58,61 @@ public class Connexion extends JFrame {
                 char[] password = passField.getPassword();
 
                 if(checkConnexion(username, password)){
+                    System.out.println(so.isClosed());
+
                     ControllerSnakeGame c= new ControllerSnakeGame();
                     dispose();
+                    try{
+                        so=new Socket(s, p);
+                        InputStream inputStream = so.getInputStream();
+                        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                        Object msg1 = objectInputStream.readObject();
+                        String msg1str = (String) msg1;
+                        Gson gson = new Gson();
+                        StateGame sg = gson.fromJson(msg1str, StateGame.class);   
+                        System.out.println(sg.toString());  
+                        inputStream.close();
+                    } catch (Exception z) {
+                        z.printStackTrace();
+                    }
                 }else{
                     JFrame jFrame = new JFrame();
                     JOptionPane.showMessageDialog(jFrame, "Saisie Incorrecte");
                 }
             }
         });
-    
         setVisible(true);
     }
 
     boolean checkConnexion(String id, char[] passW){
-
-        String s="localhost";
-        int p=2627;
+        
+       
         String pseudo= id;
         char[] mdp = passW;
-        PrintWriter sortie;
         BufferedReader entree;
         String retour = "";
     
-
         try{// on connecte un socket
-            Socket so = new Socket(s, p);
-            sortie = new PrintWriter(so.getOutputStream(), true);
-            sortie.println(pseudo); // on écrit la chaîne et le newline dans le canal de sortie
-            sortie.println(mdp);
-
-
+            so=new Socket(s, p);
+            OutputStream outputStream = so.getOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            objectOutputStream.writeObject(pseudo);
+            objectOutputStream.writeObject(mdp);
             entree = new BufferedReader(new InputStreamReader(so.getInputStream()));
             retour = entree.readLine();
-
             System.out.println(retour);
-
-            so.close();
+            entree.close();
+            outputStream.close();
 
         } catch(UnknownHostException e) {System.out.println(e);}
         catch (IOException e) {System.out.println("Aucun serveur n’est rattaché au port ");}
-
+         
         if(retour.equals("200")){
             return true;
         }else{
             return false;
         }
+        
     }
   
 }
