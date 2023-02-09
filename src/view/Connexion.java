@@ -4,6 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import controller.ControllerSnakeGame;
 import model.StateGame;
@@ -21,6 +23,7 @@ public class Connexion extends JFrame {
     private JPasswordField passField;
     private JButton loginButton;
     private Socket so;
+    private ControllerSnakeGame c;
     String s="localhost";
     int p=2627;
 
@@ -51,7 +54,8 @@ public class Connexion extends JFrame {
         add(passField);
         add(loginButton);
         add(connexionFalse); 
-    
+        setVisible(true);
+
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String username = userField.getText();
@@ -59,21 +63,48 @@ public class Connexion extends JFrame {
 
                 if(checkConnexion(username, password)){
                     System.out.println(so.isClosed());
-
-                    ControllerSnakeGame c= new ControllerSnakeGame();
+                    c= new ControllerSnakeGame();
                     dispose();
-                    try{
-                        so=new Socket(s, p);
-                        InputStream inputStream = so.getInputStream();
-                        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                        Object msg1 = objectInputStream.readObject();
-                        String msg1str = (String) msg1;
-                        Gson gson = new Gson();
-                        StateGame sg = gson.fromJson(msg1str, StateGame.class);   
-                        System.out.println(sg.toString());  
-                        inputStream.close();
-                    } catch (Exception z) {
-                        z.printStackTrace();
+                    int tour=0;
+                    int keyCode=0;
+                    while(tour<5){
+                            tour++;
+                            keyCode=c.getKeyCode();
+                            
+                            try{
+                                System.out.println("Ecriture key");
+                                Socket so=new Socket(s, p);
+                                OutputStream outputStream = so.getOutputStream();
+                        
+                                ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                                String msg="keycode";
+                                //StateGame sg = new StateGame(keyCode,cs.inputMap.getStart_snakes(),cs.inputMap.getStart_items());
+                                
+                                //Gson gson = new Gson();
+                                //String json = gson.toJson(sg);
+                                objectOutputStream.writeObject(msg);
+                                objectOutputStream.writeObject(keyCode);
+
+                                //Socket so=new Socket(s, p);
+                                System.out.println("Lecture StateGame");
+                                InputStream inputStream = so.getInputStream();
+                                ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                                Object msg1 = objectInputStream.readObject();
+                                String msg1str = (String) msg1;
+                                Gson gson = new Gson();
+                                StateGame sg = gson.fromJson(msg1str, StateGame.class);   
+
+                                /* 
+                                JsonParser parser = new JsonParser();
+                                JsonObject userJson = parser.parse(json).getAsJsonObject();
+                                Gson gson = new Gson();
+                                User user = gson.fromJson(userJson, User.class);*/
+                                System.out.println(sg.toString());  
+                                Thread.sleep(5000);
+                            } catch (Exception z) {
+                                z.printStackTrace();
+                            }
+                            c.getViewSnakeGame().actualiser(c.getGame());
                     }
                 }else{
                     JFrame jFrame = new JFrame();
@@ -81,7 +112,6 @@ public class Connexion extends JFrame {
                 }
             }
         });
-        setVisible(true);
     }
 
     boolean checkConnexion(String id, char[] passW){
@@ -93,16 +123,19 @@ public class Connexion extends JFrame {
         String retour = "";
     
         try{// on connecte un socket
+            System.out.println("Ecriture connexion");
             so=new Socket(s, p);
             OutputStream outputStream = so.getOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(pseudo);
             objectOutputStream.writeObject(mdp);
+            System.out.println("Lecture connexion");
             entree = new BufferedReader(new InputStreamReader(so.getInputStream()));
             retour = entree.readLine();
             System.out.println(retour);
             entree.close();
             outputStream.close();
+            so.close();
 
         } catch(UnknownHostException e) {System.out.println(e);}
         catch (IOException e) {System.out.println("Aucun serveur n’est rattaché au port ");}

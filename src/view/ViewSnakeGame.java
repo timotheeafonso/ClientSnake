@@ -52,6 +52,7 @@ public class ViewSnakeGame implements Observateur{
 	@Override
 	public void actualiser(Observable o) {
 		if(o instanceof SimpleGame) {
+			System.out.println("okk");
 			SnakeGame snakeGame = (SnakeGame) o;
 			panel.updateInfoGame(snakeGame.geInputMap().getStart_snakes(),snakeGame.geInputMap().getStart_items());
 			panel.repaint();

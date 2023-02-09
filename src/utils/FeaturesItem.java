@@ -1,11 +1,13 @@
 package utils;
 
-public class FeaturesItem {
+import java.io.Serializable;
+
+public class FeaturesItem implements Serializable {
 
 	
-	private int x;
-	private int y;
-	private ItemType itemType;
+	int x;
+	int y;
+	ItemType itemType;
 	
 
 

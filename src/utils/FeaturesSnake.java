@@ -1,15 +1,16 @@
 package utils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class FeaturesSnake {
+public class FeaturesSnake implements Serializable {
 
 
 
 	ArrayList<Position> positions;
 	
-	private AgentAction lastAction;
+	AgentAction lastAction;
 	
 	ColorSnake colorSnake;
 	
