@@ -24,7 +24,7 @@ import utils.*;
 
 public class PanelSnakeGame extends JPanel{
 
-	private static final long serialVersionUID = 1L;
+	//private static final long serialVersionUID = 1L;
 
 	
 	protected Color ground_Color= new Color(0,0,0);
@@ -52,6 +52,9 @@ public class PanelSnakeGame extends JPanel{
 	
 	int cpt;
 
+	public PanelSnakeGame(){
+		
+	}
 	public PanelSnakeGame(int sizeX, int sizeY, boolean[][] walls, ArrayList<FeaturesSnake> featuresSnakes, ArrayList<FeaturesItem> featuresItems) {
 
 		this.sizeX = sizeX;

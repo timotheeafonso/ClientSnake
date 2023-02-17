@@ -11,13 +11,21 @@ import utils.Position;
 public class StateGame implements Serializable{
 	public ArrayList<FeaturesSnake> snakes ;
 	public ArrayList<FeaturesItem> items ;
+
+    public int sizeX;
+    public int sizeY;
+    public boolean[][] walls;
+
     //public InputMap map;
     // Default constructor
     public StateGame(){}
-    public StateGame(ArrayList<FeaturesSnake> snakes,ArrayList<FeaturesItem> items)
+    public StateGame(ArrayList<FeaturesSnake> snakes,ArrayList<FeaturesItem> items,int sizeX, int sizeY, boolean[][] walls)
     {
         this.snakes=snakes;
         this.items=items;
+        this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		this.walls = walls;	
      //   this.map=map;
     }
 
