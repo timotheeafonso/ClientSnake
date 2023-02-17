@@ -143,7 +143,7 @@ public class Connexion extends JFrame {
                         keyCode = e.getKeyCode();
                     }});
 
-                    while(tour<100){
+                    while(tour<1000){
 
 
 
@@ -182,7 +182,7 @@ public class Connexion extends JFrame {
                                 Gson gson = new Gson();
                                 User user = gson.fromJson(userJson, User.class);*/
                                 System.out.println(sg.toString());  
-                                Thread.sleep(5000);
+                                Thread.sleep(3000);
                             } catch (Exception z) {
                                 z.printStackTrace();
                             }
