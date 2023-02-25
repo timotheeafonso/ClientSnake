@@ -2,12 +2,8 @@ package view;
 import java.awt.*;
 import javax.swing.*;
 
-import model.SimpleGame;
-import patternObservateur.Observable;
-import patternObservateur.Observateur;
 
-
-public class ViewSimpleGame implements Observateur{
+public class ViewSimpleGame{
 	protected JFrame jFrame;
 	protected JLabel label;
 	
@@ -28,12 +24,6 @@ public class ViewSimpleGame implements Observateur{
 		jFrame.add(label);
 	}
 
-	@Override
-	public void actualiser(Observable o) {
-		if(o instanceof SimpleGame) {
-			SimpleGame simpleGame = (SimpleGame) o;
-			label.setText(Integer.toString(simpleGame.getTurn()));
-		}
-	}
+	
 	
 }

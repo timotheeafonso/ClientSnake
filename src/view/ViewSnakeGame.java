@@ -1,13 +1,9 @@
 package view;
+
 import java.awt.*;
-
 import javax.swing.*;
-import model.SimpleGame;
-import model.SnakeGame;
-import patternObservateur.Observable;
-import patternObservateur.Observateur;
 
-public class ViewSnakeGame implements Observateur{
+public class ViewSnakeGame{
 	private JFrame jFrame;
 	private PanelSnakeGame panel;
 	
@@ -26,14 +22,6 @@ public class ViewSnakeGame implements Observateur{
 		jFrame.setTitle("Game");
 		int panelX=panel.getSizeX();
 		int panelY=panel.getSizeY();
-		jFrame.setSize(new Dimension(panelX *50,panelY *50));
-		Dimension windowSize = jFrame.getSize();
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		Point centerPoint = ge.getCenterPoint();
-		int dx = centerPoint.x - windowSize.width / 2 ;
-		int dy = centerPoint.y - windowSize.height / 2 - 350;
-		jFrame.setLocation(dx, dy);		
-		jFrame.setVisible(true);
 		jFrame.add(this.panel);
 	}
 
@@ -54,8 +42,6 @@ public class ViewSnakeGame implements Observateur{
 			raport=panelY/panelX;
 			tailleY=panelY*500*raport/panelY;
 		}
-		
-
 		jFrame.setSize(new Dimension(panelX *50,panelY *50));
 		Dimension windowSize = jFrame.getSize();
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -66,23 +52,12 @@ public class ViewSnakeGame implements Observateur{
 		jFrame.setVisible(true);
 		jFrame.add(this.panel);
 	}
-
-	@Override
-	public void actualiser(Observable o) {
-		if(o instanceof SimpleGame) {
-			System.out.println("okk");
-			SnakeGame snakeGame = (SnakeGame) o;
-			panel.updateInfoGame(snakeGame.geInputMap().getStart_snakes(),snakeGame.geInputMap().getStart_items());
-			panel.repaint();
-			
-		}
-	}
+	
 
 	public void setPanel(PanelSnakeGame panel2) {
 		jFrame.remove(panel);
 		this.panel=panel2;
 		jFrame.add(panel);
-		jFrame.setVisible(true);
 		int panelX=panel.getSizeX();
 		int panelY=panel.getSizeY();
 		
@@ -99,10 +74,10 @@ public class ViewSnakeGame implements Observateur{
 		
 
 		jFrame.setSize(new Dimension(panelX *50,panelY * 50));
-		
+		jFrame.setVisible(true);
+
 		panel.repaint();
 	}
-
 	
 	
 }

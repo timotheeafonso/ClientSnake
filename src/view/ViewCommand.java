@@ -1,28 +1,17 @@
 package view;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
 import controller.ControllerSnakeGame;
-import model.SnakeGame;
-import patternEtat.EtatFin;
 import patternEtat.EtatPause;
 import patternEtat.EtatStart;
 import patternEtat.EtatStop;
-import patternObservateur.Observable;
-import patternObservateur.Observateur;
-import strategy.RandomStrategyIA;
-import strategy.UserStrategy;
-import utils.ColorSnake;
-import model.Agent;
-import model.InputMap;
-import model.Snake;
 
-public class ViewCommand implements Observateur{
+public class ViewCommand{
 	
 	private JFrame jFrame;
 	private JSlider slider;
@@ -109,7 +98,7 @@ public class ViewCommand implements Observateur{
 		bg.add(r1);bg.add(r2); 
 		radioGroup.add(r1);   
 		radioGroup.add(r2);
-		r1.setSelected(true);
+		r2.setSelected(true);
 		top.add(restartButton);
 		top.add(playButton);
 		top.add(stepButton);
@@ -134,9 +123,11 @@ public class ViewCommand implements Observateur{
 				int r = j.showOpenDialog(null);
 				if (r == JFileChooser.APPROVE_OPTION){
 					String fileName=j.getSelectedFile().getAbsolutePath();
+					controller.setFileName(fileName);
 					try {
-						InputMap ip = new InputMap(fileName);
-						controller.setInitMap(ip, fileName);
+						controller.pause();
+	        			controller.changeEtat(new EtatPause());
+	        			changeEtat();
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -174,7 +165,6 @@ public class ViewCommand implements Observateur{
 	        		controller.step();
 	        		controller.changeEtat(new EtatPause());
 	        		changeEtat();
-					actualiser(controller.getGame());
 	        }
 	    });
 		
@@ -187,12 +177,11 @@ public class ViewCommand implements Observateur{
 
 		ActionListener sliceActionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-				SnakeGame sg = ((SnakeGame)controller.getGame());
 			  if(r1.isSelected()){
-					sg.setStrategy(new RandomStrategyIA());
+					controller.setStrategy(1);
 			  }else{
-					sg.setStrategy(new UserStrategy());
-					
+					controller.setStrategy(0);
+				
 			  }
 			}
 		  };
@@ -203,7 +192,7 @@ public class ViewCommand implements Observateur{
 	}
 
  
-
+	/* 	
 	@Override
 	public void actualiser(Observable o) {
 		if(o instanceof SnakeGame) {
@@ -263,7 +252,7 @@ public class ViewCommand implements Observateur{
 			}
 		}
 	}
-	
+	*/
 	public void changeEtat() {
 		pauseButton.setEnabled(controller.getEtat().onPause());
 		playButton.setEnabled(controller.getEtat().onStart());
@@ -271,6 +260,8 @@ public class ViewCommand implements Observateur{
 		restartButton.setEnabled(controller.getEtat().onRestart());
 		
 	}
+
+
 
 	
 }

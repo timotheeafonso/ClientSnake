@@ -16,8 +16,6 @@ public class StateGame implements Serializable{
     public int sizeY;
     public boolean[][] walls;
 
-    //public InputMap map;
-    // Default constructor
     public StateGame(){}
     public StateGame(ArrayList<FeaturesSnake> snakes,ArrayList<FeaturesItem> items,int sizeX, int sizeY, boolean[][] walls)
     {
@@ -26,7 +24,6 @@ public class StateGame implements Serializable{
         this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.walls = walls;	
-     //   this.map=map;
     }
 
     public String toString(){

@@ -11,9 +11,7 @@ public class Test{
 		try {
 			new Connexion();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//ControllerSnakeGame c=new ControllerSnakeGame();
 	}
 }
