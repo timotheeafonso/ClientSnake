@@ -19,6 +19,8 @@ public class ControllerSnakeGame extends AbstractController implements Serializa
 	boolean restart;
 	boolean step;
 	boolean play;
+	int turn;
+	int maxTurn;
 
 	public ControllerSnakeGame() {
 		strat=0;
@@ -108,6 +110,22 @@ public class ControllerSnakeGame extends AbstractController implements Serializa
 		step=false;
 		restart=false;
     }
+
+	public int getTurn() {
+		return turn;
+	}
+
+	public void setTurn(int turn) {
+		this.turn = turn;
+	}
+
+	public int getMaxTurn() {
+		return maxTurn;
+	}
+
+	public void setMaxTurn(int maxTurn) {
+		this.maxTurn = maxTurn;
+	}
 
 	
     

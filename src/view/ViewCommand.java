@@ -3,13 +3,17 @@ package view;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import controller.ControllerSnakeGame;
+import patternEtat.EtatFin;
 import patternEtat.EtatPause;
 import patternEtat.EtatStart;
 import patternEtat.EtatStop;
+import utils.ColorSnake;
+import utils.FeaturesSnake;
 
 public class ViewCommand{
 	
@@ -25,8 +29,6 @@ public class ViewCommand{
 	private JLabel labelSnake2;
 	private JLabel labelVieSnake1;
 	private JLabel labelVieSnake2;
-	private JLabel labelEffetSnake1;
-	private JLabel labelEffetSnake2;
 	
 	public ViewCommand(ControllerSnakeGame controller) {
 		
@@ -50,14 +52,10 @@ public class ViewCommand{
 		labelSnake2 = new JLabel("",JLabel.CENTER);
 		labelVieSnake1 = new JLabel("",JLabel.CENTER);
 		labelVieSnake2 = new JLabel("",JLabel.CENTER);
-		labelEffetSnake1 = new JLabel("",JLabel.CENTER);
-		labelEffetSnake2 = new JLabel("",JLabel.CENTER);
 		snake1.add(labelSnake1);
 		snake1.add(labelVieSnake1);
-		snake1.add(labelEffetSnake1);
 		snake2.add(labelSnake2);
 		snake2.add(labelVieSnake2);
-		snake2.add(labelEffetSnake2);
 		snakes.add(snake1);
 		snakes.add(snake2);
 
@@ -192,76 +190,45 @@ public class ViewCommand{
 	}
 
  
-	/* 	
-	@Override
-	public void actualiser(Observable o) {
-		if(o instanceof SnakeGame) {
-			SnakeGame simpleGame = (SnakeGame) o;
-			labelTurn.setText("Turn: "+Integer.toString(simpleGame.getTurn())+" / "	+Integer.toString(simpleGame.getMaxturn()));
+	public void actualiser(ArrayList<FeaturesSnake> snakes) {
+			labelTurn.setText("Turn: "+controller.getTurn()+" / "+controller.getMaxTurn());
 			
 			boolean red=false;
 			boolean green = false;
-			for(Agent a : simpleGame.getSnakes()){
-				Snake s = (Snake)a;
-				if(s.getColor()==ColorSnake.Green){
+			for(FeaturesSnake a : snakes){
+				if(a.getColorSnake()==ColorSnake.Green){
 					green=true;
 					labelSnake1.setText("Snake 1");
-					labelVieSnake1.setText("Vie: "+Integer.toString(s.getPosition().size()));
-					if(s.getInvincible()!=20){
-						int invinsible=20-s.getInvincible();
-						labelEffetSnake1.setText("Invinsible: "+Integer.toString(invinsible));
-					}else if(s.getVie()!=20){
-						int vie=20-s.getVie();
-						labelEffetSnake1.setText("Empoisoné: "+vie);
-					}else{
-						labelEffetSnake1.setText("");
-					}
+					labelVieSnake1.setText("Vie: "+Integer.toString(a.getPositions().size()));
 				}else{
 					red=true;
 					labelSnake2	.setText("Snake 2");
-					labelVieSnake2.setText("Vie: "+Integer.toString(s.getPosition().size()));
-					if(s.getInvincible()!=20){
-						int invinsible=20-s.getInvincible();
-						labelEffetSnake2.setText("Invinsible: "+Integer.toString(invinsible));
-					}else if(s.getVie()!=20){
-						int vie=20-s.getVie();
-						labelEffetSnake2.setText("Empoisoné: "+vie);
-					}else{
-						labelEffetSnake2.setText("");
-					}
+					labelVieSnake2.setText("Vie: "+Integer.toString(a.getPositions().size()));
 				}
 			}
 
 			if(!red){
 				labelSnake2.setText("");
 				labelVieSnake2.setText("");
-				labelEffetSnake2.setText("");
-
 			}
 
 			if(!green){
 				labelSnake1.setText("");
 				labelVieSnake1.setText("");
-				labelEffetSnake1.setText("");
-
 			}
 			
-			if(simpleGame.getSnakes().isEmpty()){
+			if(snakes.isEmpty()){
 				controller.changeEtat(new EtatFin());
 				changeEtat();
 			}
-		}
+		
 	}
-	*/
+	
 	public void changeEtat() {
 		pauseButton.setEnabled(controller.getEtat().onPause());
 		playButton.setEnabled(controller.getEtat().onStart());
 		stepButton.setEnabled(controller.getEtat().onStep());
 		restartButton.setEnabled(controller.getEtat().onRestart());
-		
 	}
-
-
-
 	
 }

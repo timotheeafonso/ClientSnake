@@ -1,4 +1,4 @@
-package view;
+package Client;
 
 import java.awt.*;
 import javax.swing.*;
@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import controller.ControllerSnakeGame;
 import model.ActionClient;
 import model.StateGame;
+import view.PanelSnakeGame;
+import view.ViewSnakeGame;
 import java.awt.event.*;
 import java.io.*;
 import java.net.Socket;
@@ -67,27 +69,27 @@ public class Connexion extends JFrame {
         }});
         add(loginButton);
 
-
         while(!estConnecte){
-                if(ispress){
-                        String username = userField.getText();
-                        char[] password = passField.getPassword();
+            if(ispress){
+                    String username = userField.getText();
+                    char[] password = passField.getPassword();
 
-                        if(checkConnexion(username, password)){
-                            estConnecte=true;
-                            dispose();
-
-                        }else{
-                            JFrame jFrame = new JFrame();
-                            JOptionPane.showMessageDialog(jFrame, "Saisie Incorrecte");
-                        }
-                }
-                try {
-                    Thread.sleep(25);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
+                    if(checkConnexion(username, password)){
+                        estConnecte=true;
+                        dispose();
+                    }else{
+                        JFrame jFrame = new JFrame();
+                        JOptionPane.showMessageDialog(jFrame, "Identifiant ou mot de passe incorrecte");
+                        ispress=false;
+                    }
+                    
             }
+            try {
+                Thread.sleep(25);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+        }
         if(estConnecte){
                 ControllerSnakeGame controllerSnakeGame = new ControllerSnakeGame();
                 vue = controllerSnakeGame.getViewSnakeGame();
@@ -129,6 +131,9 @@ public class Connexion extends JFrame {
                                 StateGame sg = gson.fromJson(msg1str, StateGame.class); 
                                 panel = new PanelSnakeGame(sg.sizeX, sg.sizeY, sg.walls,sg.snakes, sg.items); 
                                 vue.setPanel(panel); 
+                                controllerSnakeGame.setTurn(sg.turn);
+                                controllerSnakeGame.setMaxTurn(sg.maxTurn);
+                                controllerSnakeGame.getVc().actualiser(sg.snakes);
                                 oldsg=msg1str;
                             }
                             
@@ -154,10 +159,15 @@ public class Connexion extends JFrame {
             OutputStream outputStream = so.getOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(pseudo);
-            objectOutputStream.writeObject(mdp);
+            PrintWriter sortie;
+            sortie = new PrintWriter(so.getOutputStream(), true);
+            sortie.println(mdp);
+            //objectOutputStream.writeObject(mdp);
             entree = new BufferedReader(new InputStreamReader(so.getInputStream()));
             retour = entree.readLine();
-            this.idClient = Integer.parseInt(entree.readLine());
+            if(retour.equals("200")){
+                this.idClient = Integer.parseInt(entree.readLine());
+            }
             entree.close();
             outputStream.close();
             so.close();

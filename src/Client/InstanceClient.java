@@ -1,11 +1,8 @@
-package model;
+package Client;
 
 import java.io.IOException;
 
-import controller.ControllerSnakeGame;
-import view.Connexion;
-
-public class Test{
+public class InstanceClient{
 
 	public static void main(String[] args) {
 		try {
