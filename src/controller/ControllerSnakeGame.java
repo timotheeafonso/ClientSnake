@@ -6,7 +6,7 @@ import view.ViewCommand;
 import view.ViewSnakeGame;
 import java.awt.event.*;
 import java.io.*;
-
+import java.awt.Frame;
 
 public class ControllerSnakeGame extends AbstractController implements Serializable{
 	
@@ -21,6 +21,7 @@ public class ControllerSnakeGame extends AbstractController implements Serializa
 	boolean play;
 	int turn;
 	int maxTurn;
+	boolean quit;
 
 	public ControllerSnakeGame() {
 		strat=0;
@@ -28,6 +29,7 @@ public class ControllerSnakeGame extends AbstractController implements Serializa
 		this.changeEtat(new EtatStop());
 		keyCode=0;
 		vc=  new ViewCommand(this);
+		quit=false;
 
 		viewSnakeGame.getjFrame().addKeyListener (new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
@@ -36,11 +38,23 @@ public class ControllerSnakeGame extends AbstractController implements Serializa
 				changeEtat(new EtatStart());
 			}
 		}});
+
+		viewSnakeGame.getjFrame().addWindowListener(listener);
+		vc.getjFrame().addWindowListener(listener);
+
 		pause=false;
 		play=false;
 		step=false;
 		restart=false;
 	}
+
+
+	WindowListener listener = new WindowAdapter() {
+		public void windowClosing(WindowEvent evt) {
+		   quit=true;
+		}
+	 };
+
 
 	public int getKeyCode() {
 		return keyCode;
@@ -125,6 +139,10 @@ public class ControllerSnakeGame extends AbstractController implements Serializa
 
 	public void setMaxTurn(int maxTurn) {
 		this.maxTurn = maxTurn;
+	}
+
+	public boolean isQuit() {
+		return quit;
 	}
 
 	

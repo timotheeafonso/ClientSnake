@@ -32,6 +32,7 @@ public class Connexion extends JFrame {
     long time;
     String fileName;
     int strat;
+    boolean fin;
 
 
     public Connexion() throws IOException{
@@ -91,57 +92,71 @@ public class Connexion extends JFrame {
             }
         }
         if(estConnecte){
-                ControllerSnakeGame controllerSnakeGame = new ControllerSnakeGame();
-                vue = controllerSnakeGame.getViewSnakeGame();
-                String oldsg = "";
-                Gson gson = new Gson();
-                String oldFileName=fileName;
-                while(true){
-                        
-                        try{
-                            Socket so=new Socket(s, p);
-                            OutputStream outputStream = so.getOutputStream();
+            ControllerSnakeGame controllerSnakeGame = new ControllerSnakeGame();
+            vue = controllerSnakeGame.getViewSnakeGame();
+            String oldsg = "";
+            Gson gson = new Gson();
+            String oldFileName=fileName;
+            fin = controllerSnakeGame.isQuit();
+
+            
+
+            while(!fin){
                     
-                            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-                            String msg="keycode";
+                try{
+                    Socket so=new Socket(s, p);
+                    OutputStream outputStream = so.getOutputStream();    
+                    String msg="keycode";
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                    objectOutputStream.writeObject(msg);
+                    keyCode=controllerSnakeGame.getKeyCode();
+                    time=controllerSnakeGame.getTime();
+                    fileName=controllerSnakeGame.getFileName();
+                    strat=controllerSnakeGame.getStrat();
+            
+                    ActionClient ac;
+                    if(fileName!=oldFileName){
+                            ac = new ActionClient(this.idClient,keyCode,time,fileName,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart());
+                            oldFileName=fileName;
+                            controllerSnakeGame.resetButton();
 
-                            objectOutputStream.writeObject(msg);
-                            keyCode=controllerSnakeGame.getKeyCode();
-                            time=controllerSnakeGame.getTime();
-                            fileName=controllerSnakeGame.getFileName();
-                            strat=controllerSnakeGame.getStrat();
-                  
-                            ActionClient ac;
-                            if(fileName!=oldFileName){
-                                 ac = new ActionClient(this.idClient,keyCode,time,fileName,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart());
-                                 oldFileName=fileName;
-                                 controllerSnakeGame.resetButton();
+                    }else{
+                            ac = new ActionClient(this.idClient,keyCode,time,null,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart());
+                            controllerSnakeGame.resetButton();
+                    }
+                    String json = gson.toJson(ac);
+                    objectOutputStream.writeObject(json);
+                    InputStream inputStream = so.getInputStream();
 
-                            }else{
-                                 ac = new ActionClient(this.idClient,keyCode,time,null,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart());
-                                 controllerSnakeGame.resetButton();
-                            }
-                            String json = gson.toJson(ac);
-                            objectOutputStream.writeObject(json);
-                            InputStream inputStream = so.getInputStream();
-                            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                            Object msg1 = objectInputStream.readObject();
-                            String msg1str = (String) msg1;
-                            if(!msg1str.equals(oldsg)){
-                                StateGame sg = gson.fromJson(msg1str, StateGame.class); 
-                                panel = new PanelSnakeGame(sg.sizeX, sg.sizeY, sg.walls,sg.snakes, sg.items); 
-                                vue.setPanel(panel); 
-                                controllerSnakeGame.setTurn(sg.turn);
-                                controllerSnakeGame.setMaxTurn(sg.maxTurn);
-                                controllerSnakeGame.getVc().actualiser(sg.snakes);
-                                oldsg=msg1str;
-                            }
-                            
+                    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                    Object msg1 = objectInputStream.readObject();
+                    String msg1str = (String) msg1;
+                    if(!msg1str.equals(oldsg)){
+                        StateGame sg = gson.fromJson(msg1str, StateGame.class); 
+                        panel = new PanelSnakeGame(sg.sizeX, sg.sizeY, sg.walls,sg.snakes, sg.items); 
+                        vue.setPanel(panel); 
+                        controllerSnakeGame.setTurn(sg.turn);
+                        controllerSnakeGame.setMaxTurn(sg.maxTurn);
+                        controllerSnakeGame.getVc().actualiser(sg.snakes);
+                        oldsg=msg1str;
+                    }
+                    fin = controllerSnakeGame.isQuit();
+                    if(fin){
+                        inputStream.close();
+                        outputStream.close();
+                        so.close();
+                        //controllerSnakeGame.getViewSnakeGame().getjFrame().dispose();
+                        System.exit(0);
+                    }
+                    
 
-                        } catch (Exception z) {
-                            z.printStackTrace();
-                        }
+                } catch (Exception z) {
+                    z.printStackTrace();
+                }
+                
+
             }
+            
         }
         
     }
@@ -169,6 +184,7 @@ public class Connexion extends JFrame {
                 this.idClient = Integer.parseInt(entree.readLine());
             }
             entree.close();
+            sortie.close();
             outputStream.close();
             so.close();
 

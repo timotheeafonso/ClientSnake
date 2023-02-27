@@ -230,5 +230,10 @@ public class ViewCommand{
 		stepButton.setEnabled(controller.getEtat().onStep());
 		restartButton.setEnabled(controller.getEtat().onRestart());
 	}
+
+
+	public JFrame getjFrame() {
+		return jFrame;
+	}
 	
 }
