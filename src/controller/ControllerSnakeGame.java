@@ -6,7 +6,6 @@ import view.ViewCommand;
 import view.ViewSnakeGame;
 import java.awt.event.*;
 import java.io.*;
-import java.awt.Frame;
 
 public class ControllerSnakeGame extends AbstractController implements Serializable{
 	

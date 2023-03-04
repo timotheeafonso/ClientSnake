@@ -85,9 +85,11 @@ public class Connexion extends JFrame {
                     if(conn==401){
                         JOptionPane.showMessageDialog(jFrame, "Identifiant ou mot de passe incorrecte");
                         ispress=false;
-                    }
-                    if(conn==300){
+                    }else if(conn==300){
                         JOptionPane.showMessageDialog(jFrame, "Utilisateur déja connecté");
+                        ispress=false;
+                    }else{
+                        JOptionPane.showMessageDialog(jFrame, "Erreur de syntax");
                         ispress=false;
                     }
                 }
@@ -113,53 +115,58 @@ public class Connexion extends JFrame {
                     
                 try{
                     Socket so=new Socket(s, p);
-                    OutputStream outputStream = so.getOutputStream();    
-                    String msg="keycode";
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-                    objectOutputStream.writeObject(msg);
-                    keyCode=controllerSnakeGame.getKeyCode();
-                    time=controllerSnakeGame.getTime();
-                    fileName=controllerSnakeGame.getFileName();
-                    strat=controllerSnakeGame.getStrat();
-            
-                    ActionClient ac;
-                    if(fileName!=oldFileName){
-                            ac = new ActionClient(this.idClient,keyCode,time,fileName,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart(),score);
-                            oldFileName=fileName;
-                            controllerSnakeGame.resetButton();
-
-                    }else{
-                            ac = new ActionClient(this.idClient,keyCode,time,null,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart(),score);
-                            controllerSnakeGame.resetButton();
-                    }
-                    String json = gson.toJson(ac);
-                    objectOutputStream.writeObject(json);
                     InputStream inputStream = so.getInputStream();
-
-                    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                    Object msg1 = objectInputStream.readObject();
-                    String msg1str = (String) msg1;
-                    if(!msg1str.equals(oldsg)){
-                        StateGame sg = gson.fromJson(msg1str, StateGame.class); 
-                        panel = new PanelSnakeGame(sg.sizeX, sg.sizeY, sg.walls,sg.snakes, sg.items); 
-                        vue.setPanel(panel); 
-                        controllerSnakeGame.setTurn(sg.turn);
-                        controllerSnakeGame.setMaxTurn(sg.maxTurn);
-                        controllerSnakeGame.getVc().actualiser(sg.snakes);
-                        oldsg=msg1str;
-                        if(sg.snakes.size()>0){
-                            if(sg.snakes.get(0).getColorSnake().equals(ColorSnake.Green)){
-                                if(sg.snakes.get(0).getPositions().size()>score)
-                                    score=sg.snakes.get(0).getPositions().size();
-                            }
-                        }
-                    }
+                    OutputStream outputStream = so.getOutputStream();
                     fin = controllerSnakeGame.isQuit();
                     if(fin){
+                        String msg="fin";
+                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                        objectOutputStream.writeObject(msg);
+                        objectOutputStream.writeObject(idClient);
                         inputStream.close();
                         outputStream.close();
                         so.close();
                         System.exit(0);
+                    }else{
+                        String msg="keycode";
+                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                        objectOutputStream.writeObject(msg);
+                        keyCode=controllerSnakeGame.getKeyCode();
+                        time=controllerSnakeGame.getTime();
+                        fileName=controllerSnakeGame.getFileName();
+                        strat=controllerSnakeGame.getStrat();
+                
+                        ActionClient ac;
+                        if(fileName!=oldFileName){
+                                ac = new ActionClient(this.idClient,keyCode,time,fileName,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart(),score);
+                                oldFileName=fileName;
+                                controllerSnakeGame.resetButton();
+
+                        }else{
+                                ac = new ActionClient(this.idClient,keyCode,time,null,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart(),score);
+                                controllerSnakeGame.resetButton();
+                        }
+                        String json = gson.toJson(ac);
+                        objectOutputStream.writeObject(json);
+
+                        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                        Object msg1 = objectInputStream.readObject();
+                        String msg1str = (String) msg1;
+                        if(!msg1str.equals(oldsg)){
+                            StateGame sg = gson.fromJson(msg1str, StateGame.class); 
+                            panel = new PanelSnakeGame(sg.sizeX, sg.sizeY, sg.walls,sg.snakes, sg.items); 
+                            vue.setPanel(panel); 
+                            controllerSnakeGame.setTurn(sg.turn);
+                            controllerSnakeGame.setMaxTurn(sg.maxTurn);
+                            controllerSnakeGame.getVc().actualiser(sg.snakes);
+                            oldsg=msg1str;
+                            if(sg.snakes.size()>0){
+                                if(sg.snakes.get(0).getColorSnake().equals(ColorSnake.Green)){
+                                    if(sg.snakes.get(0).getPositions().size()>score)
+                                        score=sg.snakes.get(0).getPositions().size();
+                                }
+                            }
+                        }
                     }
                     
 
@@ -203,7 +210,6 @@ public class Connexion extends JFrame {
 
         } catch(UnknownHostException e) {System.out.println(e);}
         catch (IOException e) {System.out.println("Aucun serveur n’est rattaché au port ");}
-         System.out.println(retour);
         return Integer.parseInt(retour);
         
     }

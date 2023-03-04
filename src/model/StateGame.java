@@ -2,8 +2,6 @@ package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
-
 import utils.FeaturesItem;
 import utils.FeaturesSnake;
 import utils.Position;
