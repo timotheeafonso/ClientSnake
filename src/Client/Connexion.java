@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import controller.ControllerSnakeGame;
 import model.ActionClient;
 import model.StateGame;
+import utils.ColorSnake;
 import view.PanelSnakeGame;
 import view.ViewSnakeGame;
 import java.awt.event.*;
@@ -33,7 +34,7 @@ public class Connexion extends JFrame {
     String fileName;
     int strat;
     boolean fin;
-
+    int score;
 
     public Connexion() throws IOException{
         setTitle("Connexion Snake Game");
@@ -49,6 +50,7 @@ public class Connexion extends JFrame {
 		int dy = centerPoint.y - windowSize.height ;
 		setLocation(dx, dy);	
 
+        score=0;
         connexionFalse = new JLabel("");
         userLabel = new JLabel("Nom d'utilisateur :");
         passLabel = new JLabel("Mot de passe :");
@@ -72,17 +74,23 @@ public class Connexion extends JFrame {
 
         while(!estConnecte){
             if(ispress){
-                    String username = userField.getText();
-                    char[] password = passField.getPassword();
-
-                    if(checkConnexion(username, password)){
-                        estConnecte=true;
-                        dispose();
-                    }else{
-                        JFrame jFrame = new JFrame();
+                String username = userField.getText();
+                char[] password = passField.getPassword();
+                int conn = checkConnexion(username, password);
+                if(conn==200){
+                    estConnecte=true;
+                    dispose();
+                }else{
+                    JFrame jFrame = new JFrame();
+                    if(conn==401){
                         JOptionPane.showMessageDialog(jFrame, "Identifiant ou mot de passe incorrecte");
                         ispress=false;
                     }
+                    if(conn==300){
+                        JOptionPane.showMessageDialog(jFrame, "Utilisateur déja connecté");
+                        ispress=false;
+                    }
+                }
                     
             }
             try {
@@ -116,12 +124,12 @@ public class Connexion extends JFrame {
             
                     ActionClient ac;
                     if(fileName!=oldFileName){
-                            ac = new ActionClient(this.idClient,keyCode,time,fileName,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart());
+                            ac = new ActionClient(this.idClient,keyCode,time,fileName,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart(),score);
                             oldFileName=fileName;
                             controllerSnakeGame.resetButton();
 
                     }else{
-                            ac = new ActionClient(this.idClient,keyCode,time,null,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart());
+                            ac = new ActionClient(this.idClient,keyCode,time,null,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart(),score);
                             controllerSnakeGame.resetButton();
                     }
                     String json = gson.toJson(ac);
@@ -139,13 +147,18 @@ public class Connexion extends JFrame {
                         controllerSnakeGame.setMaxTurn(sg.maxTurn);
                         controllerSnakeGame.getVc().actualiser(sg.snakes);
                         oldsg=msg1str;
+                        if(sg.snakes.size()>0){
+                            if(sg.snakes.get(0).getColorSnake().equals(ColorSnake.Green)){
+                                if(sg.snakes.get(0).getPositions().size()>score)
+                                    score=sg.snakes.get(0).getPositions().size();
+                            }
+                        }
                     }
                     fin = controllerSnakeGame.isQuit();
                     if(fin){
                         inputStream.close();
                         outputStream.close();
                         so.close();
-                        //controllerSnakeGame.getViewSnakeGame().getjFrame().dispose();
                         System.exit(0);
                     }
                     
@@ -161,7 +174,7 @@ public class Connexion extends JFrame {
         
     }
 
-    boolean checkConnexion(String id, char[] passW){
+    int checkConnexion(String id, char[] passW){
         
        
         String pseudo= id;
@@ -190,12 +203,8 @@ public class Connexion extends JFrame {
 
         } catch(UnknownHostException e) {System.out.println(e);}
         catch (IOException e) {System.out.println("Aucun serveur n’est rattaché au port ");}
-         
-        if(retour.equals("200")){
-            return true;
-        }else{
-            return false;
-        }
+         System.out.println(retour);
+        return Integer.parseInt(retour);
         
     }
   
