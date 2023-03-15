@@ -83,18 +83,19 @@ public class ControllerSnakeGame extends AbstractController implements Serializa
 
 	public  void restart() {
 		restart=true;
+		vc.openStrat();
 	}
 	public  void step() {
 		step=true;
-
+		vc.bloqueStrat();
 	}
 	public void play() {
 		play=true;
-		
+		vc.bloqueStrat();
 	}
 	public void pause() {
 		pause=true;
-		
+		vc.bloqueStrat();
 	}
 
 	public int getStrat() {

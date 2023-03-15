@@ -138,12 +138,12 @@ public class Connexion extends JFrame {
                 
                         ActionClient ac;
                         if(fileName!=oldFileName){
-                                ac = new ActionClient(this.idClient,keyCode,time,fileName,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart(),score);
+                                ac = new ActionClient(this.idClient,keyCode,time,fileName,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart());
                                 oldFileName=fileName;
                                 controllerSnakeGame.resetButton();
 
                         }else{
-                                ac = new ActionClient(this.idClient,keyCode,time,null,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart(),score);
+                                ac = new ActionClient(this.idClient,keyCode,time,null,strat,controllerSnakeGame.isPlay(),controllerSnakeGame.isPause(),controllerSnakeGame.isStep(),controllerSnakeGame.isRestart());
                                 controllerSnakeGame.resetButton();
                         }
                         String json = gson.toJson(ac);
@@ -160,12 +160,7 @@ public class Connexion extends JFrame {
                             controllerSnakeGame.setMaxTurn(sg.maxTurn);
                             controllerSnakeGame.getVc().actualiser(sg.snakes);
                             oldsg=msg1str;
-                            if(sg.snakes.size()>0){
-                                if(sg.snakes.get(0).getColorSnake().equals(ColorSnake.Green)){
-                                    if(sg.snakes.get(0).getPositions().size()>score)
-                                        score=sg.snakes.get(0).getPositions().size();
-                                }
-                            }
+                            
                         }
                     }
                     

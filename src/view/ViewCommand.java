@@ -29,7 +29,9 @@ public class ViewCommand{
 	private JLabel labelSnake2;
 	private JLabel labelVieSnake1;
 	private JLabel labelVieSnake2;
-	
+	private JRadioButton r1;
+	private JRadioButton r2;
+
 	public ViewCommand(ControllerSnakeGame controller) {
 		
 		this.controller=controller;
@@ -85,8 +87,8 @@ public class ViewCommand{
 		Icon playIcon = new ImageIcon("icons/icon_play.png");
 		playButton = new JButton(playIcon);
 		
-		JRadioButton r1=new JRadioButton("Random Strategy");    
-		JRadioButton r2=new JRadioButton("User Strategy");    
+		r1=new JRadioButton("Random Strategy");    
+		r2=new JRadioButton("User Strategy");    
 		ButtonGroup bg=new ButtonGroup(); 
 		
 		JButton button2 = new JButton("Open Map");
@@ -229,11 +231,29 @@ public class ViewCommand{
 		playButton.setEnabled(controller.getEtat().onStart());
 		stepButton.setEnabled(controller.getEtat().onStep());
 		restartButton.setEnabled(controller.getEtat().onRestart());
+		
+			
+		
 	}
 
 
 	public JFrame getjFrame() {
 		return jFrame;
 	}
+
+
+	public void openStrat() {
+		r1.setEnabled(true);
+		r2.setEnabled(true);
+	}
+
+
+    public void bloqueStrat() {
+		if( r2.isSelected()){
+			r1.setEnabled(false);
+		}else if(r1.isSelected()){
+			r2.setEnabled(false);
+		}
+    }
 	
 }

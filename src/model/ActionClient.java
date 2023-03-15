@@ -10,13 +10,13 @@ public class ActionClient {
 	private boolean restart;
 	private boolean step;
 	private boolean play;
-    private int score;
+    //private int score;
 
     public ActionClient() {
     }
 
 
-    public ActionClient(int idClient, int key, long time,String fileName, int strat, boolean play, boolean pause, boolean step,boolean restart, int score) {
+    public ActionClient(int idClient, int key, long time,String fileName, int strat, boolean play, boolean pause, boolean step,boolean restart) {
         this.idClient = idClient;
         this.key = key;
         this.time = time;
@@ -26,7 +26,7 @@ public class ActionClient {
         this.pause=pause;
         this.step=step;
         this.restart=restart;  
-        this.score=score;
+        //this.score=score;
     }
 
 
@@ -118,17 +118,5 @@ public class ActionClient {
     public void setPlay(boolean play) {
         this.play = play;
     }
-
-
-    public int getScore() {
-        return score;
-    }
-
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-    
-
     
 }
